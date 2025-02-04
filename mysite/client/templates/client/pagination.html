@@ -1,0 +1,27 @@
+<div>
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+			{% if page.has_previous %}
+      	<a class="page-link" href="?page={{ page.previous_page_number }}">&laquo;</a>
+			{% else %}
+					<span class="page-link">&laquo;</span>
+			{% endif %}
+    </li>
+		{% for num in page.paginator.page_range %}
+			<li class="page-item {% if page.number == num %}active{% endif %}" >
+				<a class="page-link"
+					 style="{% if page.number == num %}background-color: #632363; color: white; border-radius: 5px;{% endif %}"
+					 href="?page={{ num }}">
+					{{ num }}
+				</a>
+			</li>
+		{% endfor %}
+    <li class="page-item">
+			{% if page.has_next %}
+      	<a class="page-link" href="?page={{ page.next_page_number }}">&raquo;</a>
+			{% else %}
+				<span class="page-link">&raquo;</span>
+			{% endif %}
+    </li>
+  </ul>
+</div>

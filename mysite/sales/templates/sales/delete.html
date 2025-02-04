@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Ventas | Borrar transacción{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 650px;">
+		<div class="card-header text-center">
+			<h2>Eliminar transacción</h2>
+			<div class="card-body">
+				<p>
+					¿Estás segura de que deseas eliminar la transacción de
+					<b>{{ transaction.client }}</b> con valor de <b>{{ transaction.total_amount }}</b>?
+				</p>
+				<form method="POST" action="">
+					{% csrf_token %}
+					<button type="submit" class="btn">
+						ELIMINAR
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'sales:list_payment' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+
+{% endblock %}

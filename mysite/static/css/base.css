@@ -1,0 +1,182 @@
+body {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #212529;
+}
+
+.btn {
+    background-color: #632363;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    margin: 4px 2px;
+    opacity: 1;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #844e84;
+    color: white;
+}
+
+.btn-circle {
+    background-color: #632363;
+    border-radius: 50%;
+    color: white;
+    font-size: 30px;
+    padding: 4px 17px;
+}
+
+.centered-content {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 50vh;
+    text-align: center;
+    flex-direction: column;
+}
+
+.form-label {
+    text-align:left;
+    display: block;
+    margin-bottom: 3px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #380440;
+    font-family: "Poppins", sans-serif;
+    font-size: 30px;
+}
+
+.navbar {
+    background: #632363;
+}
+
+.navbar .nav-link {
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-size: 21px;
+    font-weight: 200;
+    margin-right: 50px;
+}
+
+.navbar .nav-link-active {
+    color: #ac86a9;
+}
+
+.nav-tabs .nav-link {
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 0.25rem;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #ffffff;
+    color: #380440;
+    border-color: #dee2e6 #dee2e6 #ffffff;
+}
+
+.table-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.table-link:hover {
+    background-color: #844e84;
+}
+
+/* FullCalendar custom styles */
+#calendars-container {
+    display: flex; /* Arrange items in a row */
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.calendar-employee {
+    min-height: 70vh;
+    margin-bottom: 10px;
+}
+
+.calendars-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:5px;
+    width: 100%;
+}
+
+.common-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    position: sticky;
+    top: 0; /*Ensures the header sits on top of other elements */
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1)
+}
+
+.common-header button {
+    padding: 5px 10px;
+    background-color: white;
+    border: 2px solid #632363;
+    border-radius: 10px;
+    color: #632363;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.common-header button:hover {
+    background-color: #632363;
+    color: white;
+}
+
+.employee-name {
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    color: #632363;
+    background-color: #d5c3d4;
+    border: 1px solid #632363;
+    border-radius: 5px;
+}
+
+.fc-day-today {
+    background-color: white !important;
+}
+
+.fc-col-header-cell-cushion {
+    display: none !important;
+}
+
+.left-buttons,
+.right-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.current-date {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #632363;
+}
+
+/* Select2 */
+.select2-selection__choice {
+    white-space: normal; /* Allows text to wrap and display on multiple lines */
+    word-wrap: break-word; /* Allows line wrapping if the text is long */
+    margin: 2px 5px;
+    padding: 5px;
+}

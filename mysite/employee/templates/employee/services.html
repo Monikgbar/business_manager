@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load employee_filters %}
+
+{% block title %}Empleados | Lista de servicios que realiza el empleado{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path|startswith:'/employee/view/' %}active{%endif %}"
+					 href="{% url 'employee:view' employee.id %}">
+					Información del empleado
+				</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path|startswith:'/employee/services/' %}active{%endif %}"
+					 href="{% url 'employee:services' employee.id %}">
+					Servicios
+				</a>
+      </li>
+    </ul>
+  </div>
+	{% if not services %}
+		<div class="container my-5">
+			<div class="card mx-auto" style="max-width: 650px;">
+				<div class="card-header text-center">
+					<h2>Asignar servicios a {{ employee.first_name }}</h2>
+					<div class="card-body">
+						<a href="{% url 'employee:assign_services' employee.id %}" class="btn " type="submit">AÑADIR</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% elif services %}
+		{% regroup services by category as services_by_category %}
+			<div class="container-fluid mt-4">
+				<div class="row">
+					{% for category_group in services_by_category %}
+						<div class="col-md-4 mb-3">
+							<!-- Card for the category -->
+							<div class="card">
+								<div class="card-header" style="cursor-pointer;" data-bs-toggle="collapse"
+										 data-bs-target="#collapse-{{ forloop.counter }}">
+									<h6 class="card-title mb-0">
+									 {{ category_group.grouper|default:"Sin Categoría" }}
+									</h6>
+								</div>
+							</div>
+							<!-- Accordion for services within the category -->
+							<div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse">
+								<div class="card-body">
+									{% if category_group.list %}
+										<ul class="list-group list-group-flush">
+											{% for service in category_group.list %}
+												<li class="list-group-item">
+													{{ service.name }}
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'employee:view' employee.id %}" class="btn">VOLVER</a>
+	</div>
+</div>
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<a href="{% url 'employee:assign_services' employee.id %}" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Asignar servicios">
+			+
+	</a>
+</div>
+{% endblock %}

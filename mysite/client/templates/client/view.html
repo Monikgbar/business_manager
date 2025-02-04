@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes | Detalles del cliente{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'client_view' %}active{% endif %}"
+					 href="{% url 'client:client_view' client.id %}">
+					Información del cliente
+				</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'voucher_client_list' %}active{% endif %}"
+					 href="{% url 'client:voucher_client_list' client.id %}">Bonos</a>
+      </li>
+    </ul>
+		<div class="card-body">
+			<div class="container my-5">
+				<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+					<div class="card-body">
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Nombre</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ client.first_name }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Apellidos</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ client.last_name }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Nº de teléfono</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ client.telephone_number|default_if_none:"-----" }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Email</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ client.email|default_if_none:"-----" }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Historial</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								<a href="{% url 'sales:client_payment_history' client.id %}">Ver historial de pagos</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-footer bg-transparent border-0 text-center">
+					<!-- Button to modify -->
+					<a href="{% url 'client:client_edit' client.id %}" class="btn mx-2">
+						<i class="bi bi-pencil-square"></i>Editar
+					</a>
+					<!-- Button to delete -->
+					<a href="{% url 'client:client_delete' client.id %}" class="btn mx-2">
+						<i class="bi bi-trash"></i>Eliminar
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 40px; left: 20px;">
+		<a href="{% url 'client:client_list' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías | Editar categoría{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Editar categoría</h2>
+			<div class="card-body">
+				<form method="POST" action="">
+					{% csrf_token %}
+					<div class="mb-3">
+						<div class="form-group row">
+							<label class="col-sm-3 col-form-label text-start">Nombre</label>
+							<div class="col-sm-9">
+								{{ form.name }}
+							</div>
+						</div>
+					</div>
+					<div class="mb-3">
+						<div class="form-group row">
+							<label class="col-sm-3 col-form-label text-start">Elige un color</label>
+							<div class="col-sm-3">
+								{{ form.color }}
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn">
+						GUARDAR
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'service:category_list' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}

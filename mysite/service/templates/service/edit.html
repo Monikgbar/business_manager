@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Servicios | Editar servicio{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Modificar servicio</h2>
+			<div class="card-body">
+				<form class="form" method="POST" action="{% url 'service:service_edit' service.id %}">
+					{% csrf_token %}
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Nombre</label>
+						<div class="col-sm-9">
+							{{ form.name }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Categoría</label>
+						<div class="col-sm-9">
+							{{ form.category }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Precio</label>
+						<div class="col-sm-9">
+							{{ form.price }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Duración</label>
+						<div class="col-sm-9">
+							{{ form.duration }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Disponibilidad</label>
+						<div class="col-sm-9">
+							{{ form.available }}
+						</div>
+					</div>
+					<button class="btn" type="submit">MODIFICAR</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'service:service_view' service.id %}" class="btn">VOLVER</a>
+</div>
+{% endblock %}
+
+<!-- Initializing Flatpickr -->
+{% block extra_js %}
+<script src="{% static 'js/time_services.js' %}"></script>
+{% endblock %}

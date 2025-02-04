@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes | Búsqueda de cliente{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 650px;">
+		<div class="card-header text-center">
+			<h4>Resultados de la búsqueda para "{{ query }}":</h4>
+			<div class="card-body">
+				{% if clients %}
+					<ul>
+					{% for client in clients %}
+						<li class="mt-2" style="list-style-type: none;">
+							<a href="{% url 'client:client_view' client.id %}"
+								 class="link-body-emphasis link-offset-2 link-underline-opacity-0" style="font-size: 21px;">
+								{{ client.first_name }} {{ client.last_name }}
+							</a>
+						</li>
+					{% endfor %}
+					</ul>
+				<div class="position-fixed" style="bottom: 20px; left: 20px;">
+					<a href="{% url 'client:client_list' %}" class="btn">VOLVER</a>
+				</div>
+				{% else %}
+					<p>No se encontró ningún cliente que coincida con los criterios de búsqueda.</p>
+					<a href="{% url 'client:client_list' %}" class="btn">VOLVER</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

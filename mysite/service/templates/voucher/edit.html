@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Bonos | Editar bono{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Modificar bono</h2>
+			<div class="card-body">
+				<form class="form" method="POST" action="{% url 'service:voucher_edit' voucher.id %}">
+					{% csrf_token %}
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Nombre</label>
+						<div class="col-sm-9">
+							{{ form.name }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Servicios</label>
+						<div class="col-sm-9">
+							<select id="services" name="services" class="form-control select2" multiple="multiple">
+								{% for group in services_by_category %}
+									<optgroup label="{{ group.category.name|default:'Sin categoría' }}">
+										{% for service in group.services %}
+											<option value="{{ service.id }}" {% if service in voucher.services.all %} selected {% endif %}>
+												{{ service.name }}
+											</option>
+										{% endfor %}
+									</optgroup>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Sesiones</label>
+						<div class="col-sm-9">
+							{{ form.total_sessions }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Precio sesión</label>
+						<div class="col-sm-9">
+							{{ form.price_session }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Descuento</label>
+						<div class="col-sm-9">
+							{{ form.discount }}
+						</div>
+					</div>
+					<button class="btn" type="submit">MODIFICAR</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'service:voucher_details' voucher.id %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/select2.js' %}"></script>
+{% endblock %}

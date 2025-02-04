@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load duration_filters %}
+
+{% block title %}Servicios | Lista de servicios sin categoría{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2>Servicios sin categoría</h2>
+	<table class="table table-hover table-sm mt-4">
+		<thead>
+			<tr>
+				<th scope="col">Servicio</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Duración</th>
+				<th scope="col">Disponibidad</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			{% for service in services %}
+				<tr onclick="window.location='{% url 'service:service_view' service.id %}'" style="cursor: pointer;">
+					<td>{{ service.name }}</td>
+					<td>{{ service.price }}</td>
+					<td>{{ service.duration|format_duration }}</td>
+					<td>{{ service.available|default_if_none:"--" }}</td>
+				</tr>
+			{% empty %}
+				<p>No hay servicios disponibles sin categoría.</p>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'service:category_list' %}" class="btn">VOLVER</a>
+</div>
+
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'service:service_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Añadir nuevo servicio">
+			+
+		</button>
+	</form>
+</div>
+{% endblock %}

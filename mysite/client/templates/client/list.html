@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Clientes | Lista de clientes{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<div class="d-inline">
+		<h2 style="display: inline; vertical-align: middle;">Clientes</h2>
+		<!-- Search button client -->
+		<a href="#" data-bs-toggle="collapse" data-bs-target="#searchBox" aria-expanded="false" aria-controls="searchBox">
+			<img src="{% static 'resources/lookup.png' %}" alt="search client"
+					 style="max-width: 30px; vertical-align: middle; margin-left: 20px;"
+					 data-bs-toggle="tooltip" title="Buscar cliente">
+		</a>
+		<!-- Collapsible search box -->
+		<div class="collapse" id="searchBox">
+			<form method="get" action="{% url 'client:client_search' %}">
+				<input type="text" name="query" placeholder="Busca aquí..." class="form-control mt-2">
+				<button type="submit" class="btn">Buscar</button>
+			</form>
+		</div>
+	</div>
+	
+{% if not clients %}
+	<!-- Focused content -->
+	<div class="centered-content">
+		<div>
+			<img src="{% static 'resources/import_client.png' %}" alt="add client" class="mb-4" style="max-width: 50px;">
+			<p style="font-size: 100%">Añade a tu clientes</p>
+			<p class="text-muted" style="font-size: 75%">
+				Todo será más fácil y rápido <br> si importas a tus clientes.<br>¡Tu tiempo es oro!
+			</p>
+			<form method="POST" action="{% url 'client:client_import' %}">
+				{% csrf_token %}
+				<button type="submit" class="btn">IMPORTAR CLIENTES</button>
+			</form>
+		</div>
+	</div>
+	
+{% else %}
+	<!-- Show table if clients exist -->
+	<div class="container-fluid mt-4">
+		<table class="table table-hover table-sm">
+			<thead>
+				<tr>
+					<th scope="col">Nombre</th>
+					<th scope="col">Apellidos</th>
+					<th scope="col">Nº de teléfono</th>
+					<th scope="col">Email</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+			{% for client in clients %}
+				<tr onclick="window.location='{% url 'client:client_view' client.id %}'" style="cursor: pointer;">
+					<td>{{ client.first_name }}</td>
+					<td>{{ client.last_name }}</td>
+					<td>{{ client.telephone_number|default_if_none:"-----" }}</td>
+					<td>{{ client.email|default_if_none:"-----" }}</td>
+					<td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% if clients %}
+		{% include "client/pagination.html" with page=clients %}
+	{% endif %}
+</div>
+{% endif %}
+
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'client:client_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Añadir nuevo cliente">
+			+
+		</button>
+	</form>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+<!-- Button export client -->
+	<a href="{% url 'client:client_export' %}" class="btn">EXPORTAR CLIENTES</a>
+</div>
+{% endblock %}

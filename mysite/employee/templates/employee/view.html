@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load employee_filters %}
+
+{% block title %}Empleados | Detalles del empleado{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path|startswith:'/employee/view/' %}active{%endif %}"
+					 href="{% url 'employee:view' employee.id %}">
+					Información del empleado
+				</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path|startswith:'/employee/services/' %}active{%endif %}"
+					 href="{% url 'employee:services' employee.id %}">
+					Servicios
+				</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="container my-5">
+			<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+				<div class="card-body">
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Nombre</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ employee.first_name }}
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Apellidos</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ employee.last_name }}
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Nº de teléfono</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ employee.telephone_number }}
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Email</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ employee.email|default_if_none:"-----" }}
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Color asignado</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							<input type="color" value="{{ employee.color }}">
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="card-footer bg-transparent border-0 text-center">
+				<!-- Button to modify -->
+				<a href="{% url 'employee:edit' employee.id %}" class="btn mx-2">
+					<i class="bi bi-pencil-square"></i>Editar
+				</a>
+				<!-- Button to delete -->
+				<a href="{% url 'employee:delete' employee.id %}" class="btn mx-2">
+					<i class="bi bi-trash"></i>Eliminar
+				</a>
+			</div>
+    </div>
+	</div>
+	<div class="position-fixed" style="bottom: 40px; left: 20px;">
+		<a href="{% url 'employee:list' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Stock Application &#8212; Business Manager 0.1.0-alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=f34cbc3c"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Service Application" href="service.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="stock-application">
+<h1>Stock Application<a class="headerlink" href="#stock-application" title="Link to this heading">¶</a></h1>
+<p>Documentation for the ‘stock’ app.</p>
+<section id="module-stock.forms">
+<span id="forms"></span><h2>Forms<a class="headerlink" href="#module-stock.forms" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.forms.ProductForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stock.forms.</span></span><span class="sig-name descname"><span class="pre">ProductForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/forms.html#ProductForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.forms.ProductForm" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelForm</span></code></p>
+<p>A form for managing ‘Product’ objects.</p>
+<p>This form includes fields for product details such as name, supplier, description, price, and stock. Custom widgets
+are used to enhance the user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Meta</strong> – Specifies the model and fields to be used in the form, along with custom widgets.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="_modules/stock/forms.html#ProductForm.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.forms.ProductForm.Meta" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Metaclass for ProductForm.</p>
+<p>Defines the model, fields to include, and widgets for form rendering.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['name',</span> <span class="pre">'supplier',</span> <span class="pre">'description',</span> <span class="pre">'price',</span> <span class="pre">'stock']</span></em><a class="headerlink" href="#stock.forms.ProductForm.Meta.fields" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#stock.forms.ProductForm.Meta.model" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#stock.models.Product" title="stock.models.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">&lt;django.forms.widgets.Textarea</span> <span class="pre">object&gt;,</span> <span class="pre">'name':</span> <span class="pre">&lt;django.forms.widgets.TextInput</span> <span class="pre">object&gt;,</span> <span class="pre">'price':</span> <span class="pre">&lt;django.forms.widgets.NumberInput</span> <span class="pre">object&gt;,</span> <span class="pre">'stock':</span> <span class="pre">&lt;django.forms.widgets.NumberInput</span> <span class="pre">object&gt;,</span> <span class="pre">'supplier':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#stock.forms.ProductForm.Meta.widgets" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.base_fields">
+<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'price':</span> <span class="pre">&lt;django.forms.fields.DecimalField</span> <span class="pre">object&gt;,</span> <span class="pre">'stock':</span> <span class="pre">&lt;django.forms.fields.IntegerField</span> <span class="pre">object&gt;,</span> <span class="pre">'supplier':</span> <span class="pre">&lt;django.forms.models.ModelChoiceField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#stock.forms.ProductForm.base_fields" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.declared_fields">
+<span class="sig-name descname"><span class="pre">declared_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#stock.forms.ProductForm.declared_fields" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="stock.forms.ProductForm.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#stock.forms.ProductForm.media" title="Link to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stock.forms.</span></span><span class="sig-name descname"><span class="pre">StockMovementForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_id='id_%s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_suffix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_permitted=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_required_attribute=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/forms.html#StockMovementForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.forms.StockMovementForm" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelForm</span></code></p>
+<p>A form for managing ‘StockMovement’ objects.</p>
+<p>This form includes fields for stock movement details such as quantity, movement type, and reason. Custom widgets are
+used to enhance the user interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Meta</strong> – Specifies the model and fields to be used in the form, along with custom widgets.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="_modules/stock/forms.html#StockMovementForm.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.forms.StockMovementForm.Meta" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Metaclass for StockMovementForm.</p>
+<p>Defines the model, fields to include, and widgets for form rendering.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.Meta.clean_quantity">
+<span class="sig-name descname"><span class="pre">clean_quantity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/forms.html#StockMovementForm.Meta.clean_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.forms.StockMovementForm.Meta.clean_quantity" title="Link to this definition">¶</a></dt>
+<dd><p>Clean and validate the quantity field.</p>
+<p>This method checks if a quantity value has been provided and raises a ValidationError if it’s missing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The cleaned quantity value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int or float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If the quantity is None or not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['quantity',</span> <span class="pre">'movement_type',</span> <span class="pre">'reason']</span></em><a class="headerlink" href="#stock.forms.StockMovementForm.Meta.fields" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#stock.forms.StockMovementForm.Meta.model" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#stock.models.StockMovement" title="stock.models.StockMovement"><code class="xref py py-class docutils literal notranslate"><span class="pre">StockMovement</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'movement_type':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;,</span> <span class="pre">'quantity':</span> <span class="pre">&lt;django.forms.widgets.NumberInput</span> <span class="pre">object&gt;,</span> <span class="pre">'reason':</span> <span class="pre">&lt;django.forms.widgets.Select</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#stock.forms.StockMovementForm.Meta.widgets" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.base_fields">
+<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'movement_type':</span> <span class="pre">&lt;django.forms.fields.TypedChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'quantity':</span> <span class="pre">&lt;django.forms.fields.IntegerField</span> <span class="pre">object&gt;,</span> <span class="pre">'reason':</span> <span class="pre">&lt;django.forms.fields.TypedChoiceField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#stock.forms.StockMovementForm.base_fields" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.declared_fields">
+<span class="sig-name descname"><span class="pre">declared_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#stock.forms.StockMovementForm.declared_fields" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="stock.forms.StockMovementForm.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#stock.forms.StockMovementForm.media" title="Link to this definition">¶</a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-stock.models">
+<span id="models"></span><h2>Models<a class="headerlink" href="#module-stock.models" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.models.Product">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stock.models.</span></span><span class="sig-name descname"><span class="pre">Product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/models.html#Product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.models.Product" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Represents a product in the inventory.</p>
+<p>This model stores information about products, including name, description, supplier, price, stock, and last update
+time.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="stock.models.Product.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stock.models.Product.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="stock.models.Product.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stock.models.Product.MultipleObjectsReturned" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.Product.clean">
+<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/models.html#Product.clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.models.Product.clean" title="Link to this definition">¶</a></dt>
+<dd><p>Validate price field.</p>
+<p>This method ensures the price is not a negative value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If price is negative</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#stock.models.Product.description" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.Product.get_next_by_update_at">
+<span class="sig-name descname"><span class="pre">get_next_by_update_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">update_at&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stock.models.Product.get_next_by_update_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.Product.get_previous_by_update_at">
+<span class="sig-name descname"><span class="pre">get_previous_by_update_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">update_at&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stock.models.Product.get_previous_by_update_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#stock.models.Product.id" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#stock.models.Product.name" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#stock.models.Product.objects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.price">
+<span class="sig-name descname"><span class="pre">price</span></span><a class="headerlink" href="#stock.models.Product.price" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.Product.reduce_stock">
+<span class="sig-name descname"><span class="pre">reduce_stock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/models.html#Product.reduce_stock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.models.Product.reduce_stock" title="Link to this definition">¶</a></dt>
+<dd><p>Reduces the stock of the product by the specified quantity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>quantity</strong> (<em>int</em>) – The quantity to reduce from the stock.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If there is insufficient stock.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.Product.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/models.html#Product.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.models.Product.save" title="Link to this definition">¶</a></dt>
+<dd><p>Save the model instance with validation.</p>
+<p>Performs full validation before saving to ensure data integrity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The saved model instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.stock">
+<span class="sig-name descname"><span class="pre">stock</span></span><a class="headerlink" href="#stock.models.Product.stock" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.stock_movement">
+<span class="sig-name descname"><span class="pre">stock_movement</span></span><a class="headerlink" href="#stock.models.Product.stock_movement" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.supplier">
+<span class="sig-name descname"><span class="pre">supplier</span></span><a class="headerlink" href="#stock.models.Product.supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.supplier_id">
+<span class="sig-name descname"><span class="pre">supplier_id</span></span><a class="headerlink" href="#stock.models.Product.supplier_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Product.update_at">
+<span class="sig-name descname"><span class="pre">update_at</span></span><a class="headerlink" href="#stock.models.Product.update_at" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.models.StockMovement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stock.models.</span></span><span class="sig-name descname"><span class="pre">StockMovement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/models.html#StockMovement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.models.StockMovement" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Represents a movement in the stock of a product.</p>
+<p>This model stores information about stock movements, including the product, quantity, type of movement, reason, and
+creation time.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="stock.models.StockMovement.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stock.models.StockMovement.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.MOVEMENT_CHOICES">
+<span class="sig-name descname"><span class="pre">MOVEMENT_CHOICES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('increase',</span> <span class="pre">'Aumento'),</span> <span class="pre">('decrease',</span> <span class="pre">'Reducción')]</span></em><a class="headerlink" href="#stock.models.StockMovement.MOVEMENT_CHOICES" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="stock.models.StockMovement.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stock.models.StockMovement.MultipleObjectsReturned" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.REASON_CHOICES">
+<span class="sig-name descname"><span class="pre">REASON_CHOICES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('cabin_expense',</span> <span class="pre">'Gasto</span> <span class="pre">en</span> <span class="pre">cabina'),</span> <span class="pre">('sale',</span> <span class="pre">'Venta'),</span> <span class="pre">('disrepair',</span> <span class="pre">'Mal</span> <span class="pre">estado'),</span> <span class="pre">('increase</span> <span class="pre">stock',</span> <span class="pre">'Aumento</span> <span class="pre">de</span> <span class="pre">stock')]</span></em><a class="headerlink" href="#stock.models.StockMovement.REASON_CHOICES" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.created_at">
+<span class="sig-name descname"><span class="pre">created_at</span></span><a class="headerlink" href="#stock.models.StockMovement.created_at" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.StockMovement.get_movement_type_display">
+<span class="sig-name descname"><span class="pre">get_movement_type_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">movement_type&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stock.models.StockMovement.get_movement_type_display" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.StockMovement.get_next_by_created_at">
+<span class="sig-name descname"><span class="pre">get_next_by_created_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">created_at&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stock.models.StockMovement.get_next_by_created_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.StockMovement.get_previous_by_created_at">
+<span class="sig-name descname"><span class="pre">get_previous_by_created_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">created_at&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stock.models.StockMovement.get_previous_by_created_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stock.models.StockMovement.get_reason_display">
+<span class="sig-name descname"><span class="pre">get_reason_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">reason&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stock.models.StockMovement.get_reason_display" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#stock.models.StockMovement.id" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.movement_type">
+<span class="sig-name descname"><span class="pre">movement_type</span></span><a class="headerlink" href="#stock.models.StockMovement.movement_type" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#stock.models.StockMovement.objects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.product">
+<span class="sig-name descname"><span class="pre">product</span></span><a class="headerlink" href="#stock.models.StockMovement.product" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.product_id">
+<span class="sig-name descname"><span class="pre">product_id</span></span><a class="headerlink" href="#stock.models.StockMovement.product_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.quantity">
+<span class="sig-name descname"><span class="pre">quantity</span></span><a class="headerlink" href="#stock.models.StockMovement.quantity" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.StockMovement.reason">
+<span class="sig-name descname"><span class="pre">reason</span></span><a class="headerlink" href="#stock.models.StockMovement.reason" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stock.models.Supplier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stock.models.</span></span><span class="sig-name descname"><span class="pre">Supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/models.html#Supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.models.Supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Represents a supplier of products.</p>
+<p>This model stores information about suppliers, including their name.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="stock.models.Supplier.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stock.models.Supplier.DoesNotExist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="stock.models.Supplier.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stock.models.Supplier.MultipleObjectsReturned" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Supplier.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#stock.models.Supplier.id" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Supplier.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#stock.models.Supplier.name" title="Link to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Supplier.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#stock.models.Supplier.objects" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="stock.models.Supplier.products">
+<span class="sig-name descname"><span class="pre">products</span></span><a class="headerlink" href="#stock.models.Supplier.products" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-stock.views">
+<span id="views"></span><h2>Views<a class="headerlink" href="#module-stock.views" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.add_products">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">add_products</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#add_products"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.add_products" title="Link to this definition">¶</a></dt>
+<dd><p>Add a new product.</p>
+<p>This view handles both GET and POST requests for adding a new product.
+It renders a form for product creation and processes the form submission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The HTTP request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the product creation form or redirect to supplier list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.add_supplier">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">add_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#add_supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.add_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Add a new supplier.</p>
+<p>This view handles POST requests for adding a new supplier.
+It creates a new Supplier object with the provided name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The HTTP request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Redirect to the supplier list page.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.create_stock_movement">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">create_stock_movement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#create_stock_movement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.create_stock_movement" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new stock movement for a specific product.</p>
+<p>This view handles both GET and POST requests for creating a new stock movement.
+It renders a form for stock movement creation and processes the form submission.
+After successful creation, it updates the product’s stock accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>product_id</strong> – The ID of the product for which the stock movement is being created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the stock movement creation form or redirect to product details.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the product with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.delete_product">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">delete_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#delete_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.delete_product" title="Link to this definition">¶</a></dt>
+<dd><p>Delete a specific product.</p>
+<p>This view handles the deletion of a product. It requires a POST request to actually delete the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>product_id</strong> – The ID of the product to be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Redirect to the supplier list page after successful deletion, or confirmation page for GET requests.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the product with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.delete_supplier">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">delete_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplier_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#delete_supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.delete_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Delete a specific supplier.</p>
+<p>This view handles POST requests for deleting a supplier.
+It deletes the supplier with the given ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>supplier_id</strong> – The ID of the supplier to be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Redirect to the supplier list page.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the supplier with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.details_product">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">details_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#details_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.details_product" title="Link to this definition">¶</a></dt>
+<dd><p>Display details of a specific product.</p>
+<p>This view retrieves and displays the details of a single product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>product_id</strong> – The ID of the product to be viewed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the product details.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the product with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.edit_product">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">edit_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#edit_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.edit_product" title="Link to this definition">¶</a></dt>
+<dd><p>Edit an existing product.</p>
+<p>This view handles both GET and POST requests for editing a product.
+It retrieves the product details, renders a form for editing, and processes the form submission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>product_id</strong> – The ID of the product to be edited.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the product edit form or redirect to product details.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the product with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.edit_supplier">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">edit_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplier_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#edit_supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.edit_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Edit an existing supplier.</p>
+<p>This view handles POST requests for editing a supplier.
+It updates the name of the supplier with the given ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>supplier_id</strong> – The ID of the supplier to be edited.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Redirect to the products page for the supplier.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the supplier with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.list_supplier">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">list_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#list_supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.list_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Display a list of all suppliers and products without a supplier.</p>
+<p>This view retrieves all suppliers and products that do not belong to any supplier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The HTTP request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the list of suppliers and products without a supplier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.products_supplier">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">products_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplier_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#products_supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.products_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Display products for a specific supplier.</p>
+<p>This view retrieves all products for a given supplier and paginates the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – The HTTP request object.</p></li>
+<li><p><strong>supplier_id</strong> – The ID of the supplier whose products are being viewed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the list of products for the supplier.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Http404</strong> – If the supplier with the given ID does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.products_without_supplier">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">products_without_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#products_without_supplier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.products_without_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Display products that do not belong to any supplier.</p>
+<p>This view retrieves all products that have no associated supplier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The HTTP request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the list of products without a supplier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stock.views.search_product">
+<span class="sig-prename descclassname"><span class="pre">stock.views.</span></span><span class="sig-name descname"><span class="pre">search_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stock/views.html#search_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stock.views.search_product" title="Link to this definition">¶</a></dt>
+<dd><p>Search for products based on a query.</p>
+<p>This view handles searching for products based on the provided query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> – The HTTP request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rendered HTML page with the search results.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-stock.urls">
+<span id="urls"></span><h2>URLs<a class="headerlink" href="#module-stock.urls" title="Link to this heading">¶</a></h2>
+<p>URL Configuration for the Stock Management app.</p>
+<p>This module defines the URL patterns for the Stock Management application.
+It maps URLs to view functions, allowing users to interact with suppliers, products, and stock movements.</p>
+<dl>
+<dt>URL Patterns:</dt><dd><p>Supplier Views:
+- ‘supplier/list/’: Maps to the list_supplier view for listing all suppliers.
+- ‘supplier/add/’: Maps to the add_supplier view for creating a new supplier.
+- ‘supplier/edit/&lt;int:supplier_id&gt;/’: Maps to the edit_supplier view for editing an existing supplier.
+- ‘supplier/delete/&lt;int:supplier_id&gt;/’: Maps to the delete_supplier view for deleting a supplier.</p>
+<p>Product Views:
+- ‘product/add/’: Maps to the add_products view for creating a new product.
+- ‘product/details/&lt;int:product_id&gt;/’: Maps to the details_product view for viewing product details.
+- ‘product/delete/&lt;int:product_id&gt;/’: Maps to the delete_product view for deleting a product.
+- ‘product/edit/&lt;int:product_id&gt;/’: Maps to the edit_product view for editing an existing product.
+- ‘product/products_supplier/&lt;int:supplier_id&gt;/’: Maps to the products_supplier view for listing products of a
+specific supplier.
+- ‘product/products/no-supplier/’: Maps to the products_without_supplier view for listing products without a
+supplier.
+- ‘product/search/’: Maps to the search_product view for searching products.</p>
+<p>Stock Views:
+- ‘stock/create_movement/&lt;int:product_id&gt;/’: Maps to the create_stock_movement view for creating a stock movement
+for a specific product.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ‘app_name’ variable is set to ‘stock’, which is used for namespacing these URLs.</p>
+</div>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>To include these URLs in the main project URLs, use:
+path(‘stock/’, include(‘stock.urls’))</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Business Manager</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction to Business Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="urls.html">URLs Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="appointment.html">Appointment Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="employee.html">Employee Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sales.html">Sales Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">Service Application</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Stock Application</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Modules</a><ul>
+      <li>Previous: <a href="service.html" title="previous chapter">Service Application</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Mónica González Barreto.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/stock.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

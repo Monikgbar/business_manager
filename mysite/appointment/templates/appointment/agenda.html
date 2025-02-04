@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Agenda | Citas{% endblock %}
+
+{% block content %}
+<div id="calendars-container">
+	<div id="common-header" class="common-header">
+		<div class="left-buttons">
+			<button id="prev"><</button>
+			<button id="next">></button>
+		</div>
+		<div class="current-date">
+			<span id="current-date">Hoy</span>
+		</div>
+		<div class="right-buttons">
+			<button id="today">Hoy</button>
+			<button id="month-view">Mes</button>
+		</div>
+	</div>
+	<div id="calendars-row" class="calendars-row">
+		{% if employees %}
+			{% for employee in employees %}
+				<div class="employee-container" style="cursor: pointer;">
+					<div class="employee-name">{{ employee.first_name }}</div>
+					<div id="calendar-{{ employee.id }}" class="calendar-employee" data-employee-id="{{ employee.id }}"></div>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="employee-container" style="cursor: pointer;">
+				<div class="employee-name">Sin empleados</div>
+				<div id="calendar-default" class="calendar-employee" data-employee-id="default"></div>
+			</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet" />
+<!-- FullCalendar JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script type="application/json" id="appointments_data">
+    {{ appointments_data|safe }}
+</script>
+
+<script src="{% static 'js/agenda.js' %}"></script>
+{% endblock %}

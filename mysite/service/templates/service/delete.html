@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Servicios | Borrar servicio{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 650px;">
+		<div class="card-header text-center">
+			<h2>Eliminar servicio</h2>
+			<div class="card-body">
+				<p>¿Estás segura de que deseas eliminar el servicio <b>{{ service.name }}</b>?</p>
+				<form method="POST" action="">
+					{% csrf_token %}
+					<button type="submit" class="btn">
+						ELIMINAR
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'service:category_list' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+
+{% endblock %}

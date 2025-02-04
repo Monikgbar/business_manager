@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Ventas | Listado de transacciones del cliente{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2 class="mb-3">Historial de pagos de {{ client.first_name }} {{ client.last_name }}</h2>
+	<table class="table table-hover table-sm">
+		<thead>
+			<tr>
+				<th scope="col">Fecha</th>
+				<th scope="col">Detalles</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+		{% for transaction in transactions %}
+			<tr>
+				<td>{{ transaction.date|date:"d/m/Y H:i" }}</td>
+				<td>
+					<details>
+						<summary>Ver detalles</summary>
+						<ul>
+							<li>Forma de pago: {{ transaction.get_method_display }} - {{ transaction.total_amount }} €</li>
+						</ul>
+						<ul>
+							<li>
+								{% if transaction.services.exists %}
+									Servicios:
+									<ul>
+										{% for service in transaction.services.all %}
+											<li>{{ service.name }} Precio: {{ service.price }} €</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+							</li>
+						</ul>
+					</details>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% if transactions %}
+	{% include "sales/pagination.html" with page=payments %}
+{% endif %}
+
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+</div>
+{% endblock %}

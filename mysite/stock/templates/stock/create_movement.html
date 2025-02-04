@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Stock | Movimientos de stock{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Movimientos de stock</h2>
+			<div class="card-body">
+				<form class="form" method="POST" action="{% url 'stock:stock_create_movement' product.id %}">
+					{% csrf_token %}
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Producto</label>
+						<div class="col-sm-9" aria-readonly="true">
+							<input type="text" class="form-control" value="{{ product.name }}" readonly>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Movimiento</label>
+						<div class="col-sm-9">
+							{{ form.movement_type }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Cantidad</label>
+						<div class="col-sm-9">
+							{{ form.quantity }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Motivo</label>
+						<div class="col-sm-9">
+							{{ form.reason }}
+						</div>
+					</div>
+					<button class="btn" type="submit">GUARDAR</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'stock:product_details' product.id %}" class="btn">VOLVER</a>
+</div>
+{% endblock %}
+

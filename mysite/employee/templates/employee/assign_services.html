@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Empleados | Asignar servicios al empleado{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2 class="text-center mb-4">Asignar servicios a {{ employee.first_name }} {{ employee.last_name }}</h2>
+	<div class="card mx-auto" style="max-width: 500px;">
+		<div class="card-body">
+			{% if services %}
+				<form action=""  method="POST">
+					{% csrf_token %}
+					<div class="accordion" id="servicesAccordion">
+						<!-- Divide services into categories -->
+						{% regroup services by category as services_by_category %}
+						{% for category_group in services_by_category %}
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="heading{{ category_group.grouper.id }}">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+													data-bs-target="#collapse{{ category_group.grouper.id }}" aria-expanded="false"
+													aria-controls="collapse{{ category_group.grouper.id }}">
+										{{ category_group.grouper.name|default:"Sin Categoría" }}
+									</button>
+								</h2>
+								<div id="collapse{{ category_group.grouper.id }}" class="accordion-collapse collapse"
+										 aria-labelledby="heading{{ category_group.grouper.id }}" data-bs-parent="#serviceAccordion">
+									<div class="accordion-body">
+										{% if category_group.list %}
+										<!-- Button select all -->
+										<div class="mb-2">
+											<label>
+												<input type="checkbox" class="select-all" data-category="{{ category_group.grouper.id }}">
+													Seleccionar todo
+											</label>
+										</div>
+											<ul class="list-group list-group-flush">
+												{% for service in category_group.list %}
+													<li class="list-group-item">
+														<label>
+															<input type="checkbox" name="services" value="{{ service.id  }}"
+																		 class="service-checkbox category-{{ category_group.grouper.id }}"
+																		 {% if service in employee.services.all %} checked {% endif %}>
+															{{ service.name }}
+														</label>
+													</li>
+												{% endfor %}
+											</ul>
+											{% else %}
+												<p class="text-center">No hay servicios en esta categoría.</p>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+						<div class="text-center mt-3">
+							<button class="btn" type="submit">GUARDAR</button>
+						</div>
+					</div>
+				</form>
+			{% else %}
+				<p class="text-center">No se hay servicios disponibles para asignar a este empleado.</p>
+			{% endif %}
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'employee:services' employee.id %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/select_all_services.js' %}"></script>
+{% endblock %}

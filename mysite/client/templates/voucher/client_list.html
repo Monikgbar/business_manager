@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Clientes|Bonos | Lista de bonos{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+	<div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'client_view' %}active{% endif %}"
+					 href="{% url 'client:client_view' client.id %}">
+					Información del cliente
+				</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'voucher_client_list' %}active{% endif %}"
+					 href="{% url 'client:voucher_client_list' client.id %}">Bonos</a>
+      </li>
+    </ul>
+  </div>
+	<h2 class="mt-3">Bonos de {{ client.first_name }} {{ client.last_name }}</h2>
+	{% if not vouchers %}
+		<div class="container-fluid mt-4">
+			<div class="container my-5">
+				<div class="card mx-auto" style="max-width: 650px;">
+					<div class="card-header text-center">
+						<h2>Añadir nuevo bono</h2>
+						<div class="card-body">
+							<a href="{% url 'client:voucher_assign' client.id %}" class="btn" type="submit">AÑADIR</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+	<!-- Show table if vouchers exist -->
+	<div class="container-fluid mt-4">
+		<table class="table table-hover table-sm">
+			<thead>
+				<tr>
+					<th scope="col">Bono</th>
+					<th scope="col">Caducidad</th>
+					<th scope="col">Activo</th>
+					<th scope="col">Sesiones restantes</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+			{% for voucher in vouchers %}
+				<tr onclick="window.location='{% url 'client:voucher_client_details' voucher.id %}'" style="cursor: pointer;">
+					<td>{{ voucher.voucher.name }}</td>
+					<td>{{ voucher.expiration_date }}</td>
+					<td>{{voucher.get_is_active_display }}</td>
+					<td>{{ voucher.sessions_remaining }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% endif %}
+</div>
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'client:voucher_assign' client.id %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Añadir nuevo voucher">
+			+
+		</button>
+	</form>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'client:client_list'%}" class="btn">VOLVER</a>
+</div>
+{% endblock %}

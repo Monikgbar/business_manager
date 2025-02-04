@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>service.views &#8212; Business Manager 0.1.0-alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=f34cbc3c"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for service.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">EmptyPage</span><span class="p">,</span> <span class="n">PageNotAnInteger</span><span class="p">,</span> <span class="n">Paginator</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">CategoryForm</span><span class="p">,</span> <span class="n">ServiceForm</span><span class="p">,</span> <span class="n">VoucherForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">Service</span><span class="p">,</span> <span class="n">Voucher</span>
+
+
+<span class="c1"># Service views</span>
+<div class="viewcode-block" id="add_service">
+<a class="viewcode-back" href="../../service.html#service.views.add_service">[docs]</a>
+<span class="k">def</span> <span class="nf">add_service</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a new service.</span>
+
+<span class="sd">    This view handles both GET and POST requests for adding a new service.</span>
+<span class="sd">    It renders a form for service creation and processes the form submission.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the service creation form or redirect to category list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ServiceForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;service:category_list&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ServiceForm</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;service/add.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="edit_service">
+<a class="viewcode-back" href="../../service.html#service.views.edit_service">[docs]</a>
+<span class="k">def</span> <span class="nf">edit_service</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">service_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edit an existing service.</span>
+
+<span class="sd">    This view handles both GET and POST requests for editing a service.</span>
+<span class="sd">    It retrieves the service details, renders a form for editing, and processes the form submission.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param service_id: The ID of the service to be edited.</span>
+<span class="sd">    :return: Rendered HTML page with the service edit form or redirect to service view.</span>
+<span class="sd">    :raises Http404: If the service with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Service</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">service_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ServiceForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">service</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;service:service_view&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">service</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ServiceForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">service</span><span class="p">)</span>
+  
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;service/edit.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;service&#39;</span><span class="p">:</span> <span class="n">service</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="delete_service">
+<a class="viewcode-back" href="../../service.html#service.views.delete_service">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_service</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">service_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete a specific service.</span>
+
+<span class="sd">    This view handles the deletion of a service. It requires a POST request to actually delete the service.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param service_id: The ID of the service to be deleted.</span>
+<span class="sd">    :return: Redirect to the category list page after successful deletion, or confirmation page for GET requests.</span>
+<span class="sd">    :raises Http404: If the service with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Service</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">service_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">service</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;service:category_list&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;service/delete.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;service&#39;</span><span class="p">:</span> <span class="n">service</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="services_category">
+<a class="viewcode-back" href="../../service.html#service.views.services_category">[docs]</a>
+<span class="k">def</span> <span class="nf">services_category</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">category_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display services for a specific category.</span>
+
+<span class="sd">    This view retrieves all services for a given category and paginates the results.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param category_id: The ID of the category whose services are being viewed.</span>
+<span class="sd">    :return: Rendered HTML page with the list of services for the category.</span>
+<span class="sd">    :raises Http404: If the category with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="c1"># Pagination with 20 services per page</span>
+    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EmptyPage</span><span class="p">:</span>
+        <span class="c1"># If page_number is out of range get last page of results</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">paginator</span><span class="o">.</span><span class="n">num_pages</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
+        <span class="c1"># If page_number is not an integer get the first page</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span> <span class="s1">&#39;service/services_category.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span> <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">services</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="services_without_category">
+<a class="viewcode-back" href="../../service.html#service.views.services_without_category">[docs]</a>
+<span class="k">def</span> <span class="nf">services_without_category</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display services that do not belong to any category.</span>
+
+<span class="sd">    This view retrieves all services that have no associated category.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the list of services without a category.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">category__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;service/services_without_category.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">services</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="view_details_service">
+<a class="viewcode-back" href="../../service.html#service.views.view_details_service">[docs]</a>
+<span class="k">def</span> <span class="nf">view_details_service</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">service_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display details of a specific service.</span>
+
+<span class="sd">    This view retrieves and displays the details of a single service.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param service_id: The ID of the service to be viewed.</span>
+<span class="sd">    :return: Rendered HTML page with the service details.</span>
+<span class="sd">    :raises Http404: If the service with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Service</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">service_id</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;service/view.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;service&#39;</span><span class="p">:</span> <span class="n">service</span><span class="p">})</span></div>
+
+
+
+<span class="c1"># Category views</span>
+<div class="viewcode-block" id="add_category">
+<a class="viewcode-back" href="../../service.html#service.views.add_category">[docs]</a>
+<span class="k">def</span> <span class="nf">add_category</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a new category.</span>
+
+<span class="sd">    This view handles both GET and POST requests for adding a new category.</span>
+<span class="sd">    It renders a form for category creation and processes the form submission.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the category creation form or redirect to category list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CategoryForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;service:category_list&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CategoryForm</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;category/add.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="edit_category">
+<a class="viewcode-back" href="../../service.html#service.views.edit_category">[docs]</a>
+<span class="k">def</span> <span class="nf">edit_category</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">category_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edit an existing category.</span>
+
+<span class="sd">    This view handles both GET and POST requests for editing a category.</span>
+<span class="sd">    It retrieves the category details, renders a form for editing, and processes the form submission.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param category_id: The ID of the category to be edited.</span>
+<span class="sd">    :return: Rendered HTML page with the category edit form or redirect to category list.</span>
+<span class="sd">    :raises Http404: If the category with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CategoryForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">category</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;service:category_list&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CategoryForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">category</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;category/edit.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="delete_category">
+<a class="viewcode-back" href="../../service.html#service.views.delete_category">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_category</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">category_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete a specific category.</span>
+
+<span class="sd">    This view handles the deletion of a category. It requires a POST request to actually delete the category.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param category_id: The ID of the category to be deleted.</span>
+<span class="sd">    :return: Redirect to the category list page after successful deletion, or confirmation page for GET requests.</span>
+<span class="sd">    :raises Http404: If the category with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">category</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;service:category_list&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;category/delete.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="list_category">
+<a class="viewcode-back" href="../../service.html#service.views.list_category">[docs]</a>
+<span class="k">def</span> <span class="nf">list_category</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display a list of all categories and services without a category.</span>
+
+<span class="sd">    This view retrieves all categories and services that do not belong to any category.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the list of categories and services without a category.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">services_without_category</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">category__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;category/list.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;categories&#39;</span><span class="p">:</span> <span class="n">categories</span><span class="p">,</span> <span class="s1">&#39;services_without_category&#39;</span><span class="p">:</span> <span class="n">services_without_category</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># Voucher views</span>
+<div class="viewcode-block" id="add_voucher">
+<a class="viewcode-back" href="../../service.html#service.views.add_voucher">[docs]</a>
+<span class="k">def</span> <span class="nf">add_voucher</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a new voucher.</span>
+
+<span class="sd">    This view handles both GET and POST requests for adding a new voucher.</span>
+<span class="sd">    It renders a form for voucher creation and processes the form submission.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the voucher creation form or redirect to voucher list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;category__name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">services_by_category</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">category</span><span class="p">):</span>
+        <span class="n">services_by_category</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span>
+            <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        
+        <span class="n">form</span> <span class="o">=</span> <span class="n">VoucherForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;service:voucher_list&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">VoucherForm</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;voucher/add.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;services_by_category&#39;</span><span class="p">:</span> <span class="n">services_by_category</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="delete_voucher">
+<a class="viewcode-back" href="../../service.html#service.views.delete_voucher">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_voucher</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">voucher_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete a specific voucher.</span>
+
+<span class="sd">    This view handles the deletion of a voucher. It requires a POST request to actually delete the voucher.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param voucher_id: The ID of the voucher to be deleted.</span>
+<span class="sd">    :return: Redirect to the voucher list page after successful deletion, or confirmation page for GET requests.</span>
+<span class="sd">    :raises Http404: If the voucher with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">voucher</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Voucher</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">voucher_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">voucher</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;service:voucher_list&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;voucher/delete.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;voucher&#39;</span><span class="p">:</span> <span class="n">voucher</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="details_voucher">
+<a class="viewcode-back" href="../../service.html#service.views.details_voucher">[docs]</a>
+<span class="k">def</span> <span class="nf">details_voucher</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">voucher_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display details of a specific voucher.</span>
+
+<span class="sd">    This view retrieves and displays the details of a single voucher.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param voucher_id: The ID of the voucher to be viewed.</span>
+<span class="sd">    :return: Rendered HTML page with the voucher details.</span>
+<span class="sd">    :raises Http404: If the voucher with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">voucher</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Voucher</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">voucher_id</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;voucher/details.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;voucher&#39;</span><span class="p">:</span> <span class="n">voucher</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="edit_voucher">
+<a class="viewcode-back" href="../../service.html#service.views.edit_voucher">[docs]</a>
+<span class="k">def</span> <span class="nf">edit_voucher</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">voucher_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edit an existing voucher.</span>
+
+<span class="sd">    This view handles both GET and POST requests for editing a voucher.</span>
+<span class="sd">    It retrieves the voucher details, renders a form for editing, and processes the form submission.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param voucher_id: The ID of the voucher to be edited.</span>
+<span class="sd">    :return: Rendered HTML page with the voucher edit form or redirect to voucher details.</span>
+<span class="sd">    :raises Http404: If the voucher with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">voucher</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Voucher</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">voucher_id</span><span class="p">)</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;category__name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">services_by_category</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span> <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">VoucherForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">voucher</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;service:voucher_details&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">voucher</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">VoucherForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">voucher</span><span class="p">)</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;services&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="n">voucher</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;voucher/edit.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;voucher&#39;</span><span class="p">:</span> <span class="n">voucher</span><span class="p">,</span> <span class="s1">&#39;services_by_category&#39;</span><span class="p">:</span> <span class="n">services_by_category</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="voucher_list">
+<a class="viewcode-back" href="../../service.html#service.views.voucher_list">[docs]</a>
+<span class="k">def</span> <span class="nf">voucher_list</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display a list of all vouchers.</span>
+
+<span class="sd">    This view retrieves all vouchers and paginates the results.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the list of vouchers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vouchers</span> <span class="o">=</span> <span class="n">Voucher</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Pagination with 20 vouchers per page</span>
+    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">vouchers</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">vouchers</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EmptyPage</span><span class="p">:</span>
+        <span class="c1"># If page_number is out of range get last page of results</span>
+        <span class="n">vouchers</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">paginator</span><span class="o">.</span><span class="n">num_pages</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
+        <span class="c1"># If page_number is not an integer get the first page</span>
+        <span class="n">vouchers</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;voucher/list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;vouchers&#39;</span><span class="p">:</span> <span class="n">vouchers</span><span class="p">})</span></div>
+
+
+
+<span class="c1"># Shared views</span>
+<div class="viewcode-block" id="search_items">
+<a class="viewcode-back" href="../../service.html#service.views.search_items">[docs]</a>
+<span class="k">def</span> <span class="nf">search_items</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search for services or vouchers based on a query.</span>
+
+<span class="sd">    This view handles searching for services or vouchers based on the provided query and model name.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param model_name: The name of the model to search (&#39;service&#39; or &#39;voucher&#39;).</span>
+<span class="sd">    :return: Rendered HTML page with the search results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;service&#39;</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__icontains</span><span class="o">=</span><span class="n">query</span><span class="p">)</span> <span class="k">if</span> <span class="n">query</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;voucher&#39;</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">Voucher</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__icontains</span><span class="o">=</span><span class="n">query</span><span class="p">)</span> <span class="k">if</span> <span class="n">query</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">&#39;shared/search_items.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">query</span><span class="p">})</span></div>
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Business Manager</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction to Business Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../urls.html">URLs Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Mónica González Barreto.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

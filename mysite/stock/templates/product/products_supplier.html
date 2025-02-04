@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock | Lista de productos de un proveedor{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<div class="d-inline">
+		<h2 style="display: inline; vertical-align: middle;">Productos de {{ supplier.name }}</h2>
+		<!-- Button to edit supplier -->
+		<button class="btn mx-2" data-id="{{ supplier.id }}" data-name="{{ supplier.name }}"
+				data-bs-target="#editSupplierModal" data-bs-toggle="modal">
+			<i class="bi bi-pencil-square"></i>Editar Proveedor
+		</button>
+		<button class="btn mt-2 delete-button"  data-id="{{supplier.id }}" data-name="{{ supplier.name }}"
+						data-bs-target="#deleteSupplierModal" data-bs-toggle="modal">
+			<i class="bi bi-trash"></i>Eliminar Proveedor
+		</button>
+		<!-- Edit supplier modal -->
+		<div class="modal fade" id="editSupplierModal" tabindex="-1" aria-labelledby="editSupplierLabel"
+				 aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editSupplierModalLabel">Editar proveedor</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<form id="editSupplierForm" method="post" action="{% url 'stock:supplier_edit' supplier.id %}">
+						{% csrf_token %}
+						<div class="modal-body">
+							<div class="mb-3">
+								<label for="supplierName" class="form-label">Nombre</label>
+								<input type="text" class="form-control" id="supplierName" name="name" required>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn">Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Delete supplier modal -->
+		<div class="modal fade" id="deleteSupplierModal" tabindex="-1" aria-labelledby="deleteSupplierLabel"
+				 aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteSupplierModalLabel">Eliminar proveedor</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<form id="deleteSupplierForm" method="post" action="{% url 'stock:supplier_delete' supplier.id %}">
+						{% csrf_token %}
+						<div class="modal-body">
+							<p>¿Estás seguro de que deseas borrar al proveedor <strong>{{ supplier.name }}</strong>?</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn">Eliminar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<table class="table table-hover table-sm mt-4">
+		<thead>
+			<tr>
+				<th scope="col">Producto</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Stock</th>
+				<th scope="col">Descripción</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			{% for product in products %}
+				<tr onclick="window.location='{% url 'stock:product_details' product.id %}'" style="cursor: pointer;">
+					<td>{{ product.name }}</td>
+					<td>{{ product.price }}€</td>
+					<td>{{ product.stock }}</td>
+					<td>{{ product.description }}</td>
+				</tr>
+			{% empty %}
+				<p>No hay productos disponibles de este proveedor.</p>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'stock:supplier_list' %}" class="btn">VOLVER</a>
+</div>
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'stock:product_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Añadir nuevo producto">
+			+
+		</button>
+	</form>
+</div>
+{% if products %}
+	{% include "product/pagination.html" with page=products %}
+{% endif %}
+{% endblock %}

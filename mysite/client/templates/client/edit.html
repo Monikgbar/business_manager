@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes | Editar cliente{% endblock %}
+ç
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Modificar cliente</h2>
+			<div class="card-body">
+				<form class="form" method="POST" action="{% url 'client:client_edit' client.id %}">
+					{% csrf_token %}
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Nombre</label>
+						<div class="col-sm-9">
+							{{ form.first_name }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Apellidos</label>
+						<div class="col-sm-9">
+							{{ form.last_name }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Teléfono</label>
+						<div class="col-sm-9">
+							{{ form.telephone_number }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label text-start">Email</label>
+						<div class="col-sm-9">
+							{{ form.email }}
+						</div>
+					</div>
+					<button class="btn" type="submit">MODIFICAR</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'client:client_list' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Empleados | Lista de empleados{% endblock %}
+
+{% block content %}
+{% if not employees %}
+	<div class="container-fluid mt-4">
+		<h2>Empleados</h2>
+		<div class="container my-5">
+			<div class="card mx-auto" style="max-width: 650px;">
+				<div class="card-header text-center">
+					<h2>Añadir nuevo empleado</h2>
+					<div class="card-body">
+						<a href="{% url 'employee:add' %}" class="btn" type="submit">AÑADIR</a>
+					</div>
+			</div>
+		</div>
+	</div>
+
+{% else %}
+	<!-- Show table if employee exist -->
+	<div class="container-fluid mt-4">
+		<h2>Empleados</h2>
+		<table class="table table-hover table-sm mt-4">
+			<thead>
+				<tr>
+					<th scope="col">Nombre</th>
+					<th scope="col">Apellidos</th>
+					<th scope="col">Nº de teléfono</th>
+					<th scope="col">Email</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+			{% for employee in employees %}
+				<tr onclick="window.location='{% url 'employee:view' employee.id %}'" style="cursor: pointer;">
+					<td>{{ employee.first_name }}</td>
+					<td>{{ employee.last_name }}</td>
+					<td>{{ employee.telephone_number }}</td>
+					<td>{{ employee.email|default_if_none:"-----" }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+		<!-- Float button back -->
+		<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endif %}
+	
+	<!-- Float button -->
+	<div class="position-fixed" style="bottom: 20px; right: 20px;">
+		<form method="POST" action="{% url 'employee:add' %}">
+			{% csrf_token %}
+			<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+							title="Añadir nuevo empleado">
+				+
+			</button>
+		</form>
+	</div>
+{% endblock %}

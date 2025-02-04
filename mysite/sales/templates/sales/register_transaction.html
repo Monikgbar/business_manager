@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Ventas | Cobro de transactiones{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 700px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2 class="mt-3">Cobrar cita</h2>
+		</div>
+		<div class="card-body">
+			<form class="form" method="POST" action="{% url 'sales:register_transaction' appointment.id %}">
+				{% csrf_token %}
+				<!-- Client -->
+				<div class="form-group row mb-3">
+					<label class="col-sm-3 col-form-label text-start">Cliente:</label>
+					<div class="col-sm-9">
+						<p class="form-control-plaintext" style="font-size: 24px; ">
+							{{ appointment.client.first_name }} {{ appointment.client.last_name }}
+						</p>
+					</div>
+				</div>
+				{{ transaction_form.client }}
+					<!-- Appointment services -->
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Servicios:</label>
+						<div class="col-sm-8">
+							<ul class="list-group">
+								{% for service in appointment.services.all %}
+									<li class="list-group-item d-flex justify-content-between align-items-center">
+										<div>
+											<input type="checkbox" name="services" value="{{ service.id }}" id="service_{{ service.id }}"
+														 class="d-none" checked data-price="{{ service.price }}">
+											<label for="service_{{ service.id }}">
+												{{ service.name }} ({{ service.price }} €)
+											</label>
+										</div>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				<hr class="hr" />
+				<!-- Payment details -->
+				<fieldset>
+					<legend>Detalles de pago</legend>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Total:</label>
+						<div class="col-sm-3">
+							{{ transaction_form.total_amount }}
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Método de pago:</label>
+						<div class="col-sm-4">
+							{{ transaction_form.method }}
+						</div>
+					</div>
+					</div>
+				</fieldset>
+				<div class="d-flex justify-content-center mt-3">
+					<button class="btn" type="submit">GUARDAR</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+</div>
+{% endblock %}

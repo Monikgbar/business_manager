@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>employee.views &#8212; Business Manager 0.1.0-alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=f34cbc3c"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for employee.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Prefetch</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">EmployeeForm</span><span class="p">,</span> <span class="n">ServicesEmployeeForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Employee</span>
+<span class="kn">from</span> <span class="nn">service.models</span> <span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">Service</span>
+
+
+<div class="viewcode-block" id="add_employee">
+<a class="viewcode-back" href="../../employee.html#employee.views.add_employee">[docs]</a>
+<span class="k">def</span> <span class="nf">add_employee</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a new employee to the database.</span>
+<span class="sd">    </span>
+<span class="sd">    This view handles the POST request to add a new employee using a form. If the form is valid, it saves the</span>
+<span class="sd">    new employee to the database and redirects to the employee list page.</span>
+<span class="sd">    </span>
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+<span class="sd">    </span>
+<span class="sd">    :return:</span>
+<span class="sd">        - Redirects to the &#39;employee&#39; page if the employee is added successfully.</span>
+<span class="sd">        - Renders the &#39;add.html&#39; template with the form if no POST request or form is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">EmployeeForm</span><span class="p">()</span>
+    <span class="n">services_categories</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s1">&#39;services&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EmployeeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">employee</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">selected_services</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;services&#39;</span><span class="p">)</span>
+            <span class="n">employee</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">employee</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">selected_services</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;employee:view&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">employee</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;employee/add.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s1">&#39;services_categories&#39;</span><span class="p">:</span> <span class="n">services_categories</span><span class="p">,</span>
+    <span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="assign_services">
+<a class="viewcode-back" href="../../employee.html#employee.views.assign_services">[docs]</a>
+<span class="k">def</span> <span class="nf">assign_services</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">employee_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assign services to an employee.</span>
+
+<span class="sd">    This view allows an administrator to assign available services to an employee. Services are grouped by category</span>
+<span class="sd">    and displayed in a form. Upon form submission, the selected services are assigned to the employee.</span>
+
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+
+<span class="sd">    :param employee_id: Integer ID of the employee to whom services will be assigned.</span>
+
+<span class="sd">    :return:</span>
+<span class="sd">        - Redirects to the &#39;employee:services&#39; page after successfully assigning services.</span>
+<span class="sd">        - Renders the &#39;assign_services.html&#39; template with the services form if no POST request or form is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">employee</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">employee_id</span><span class="p">)</span>
+    
+    <span class="c1"># Group services by category.</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">(</span><span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">available</span><span class="o">=</span><span class="n">Service</span><span class="o">.</span><span class="n">Available</span><span class="o">.</span><span class="n">POSITIVE</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;category__name&#39;</span><span class="p">))</span>
+    <span class="c1"># Create the form with the available services</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">ServicesEmployeeForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">services</span><span class="p">})</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ServicesEmployeeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">selected_services</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;services&#39;</span><span class="p">]</span>
+            <span class="n">employee</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">selected_services</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;employee:services&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">employee_id</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;employee/assign_services.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+            <span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="n">employee</span><span class="p">,</span>
+            <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">services</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="edit_employee">
+<a class="viewcode-back" href="../../employee.html#employee.views.edit_employee">[docs]</a>
+<span class="k">def</span> <span class="nf">edit_employee</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">employee_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edit an existing employee&#39;s details.</span>
+<span class="sd">    </span>
+<span class="sd">    This view allows updating the information of an employee with a specific ID. If a POST request with valid data is</span>
+<span class="sd">    provided, it updates the employee&#39;s information in the database.</span>
+<span class="sd">    </span>
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+<span class="sd">    </span>
+<span class="sd">    :param employee_id: Integer ID of the employee to be edited.</span>
+<span class="sd">    </span>
+<span class="sd">    :return:</span>
+<span class="sd">        - Redirects to the &#39;employee&#39; page if the update is successful.</span>
+<span class="sd">        - Renders the &#39;client_edit.html&#39; template with the employee&#39;s current data if no POST request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">employee</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">employee_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EmployeeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">employee</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;employee:list&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">EmployeeForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">employee</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;employee/edit.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="n">employee</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="delete_employee">
+<a class="viewcode-back" href="../../employee.html#employee.views.delete_employee">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_employee</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">employee_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete an employee from the database.</span>
+<span class="sd">    </span>
+<span class="sd">    This view displays a confirmation page for deleting an employee with a specific ID. If confirmed via a POST request,</span>
+<span class="sd">    the employee is deleted from the database and the user is redirected to the employee list page.</span>
+<span class="sd">    </span>
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+<span class="sd">    </span>
+<span class="sd">    :param employee_id: Integer ID of the employee to be deleted.</span>
+<span class="sd">    </span>
+<span class="sd">    :return:</span>
+<span class="sd">        - Redirects to the &#39;employee:list&#39; page after successful deletion.</span>
+<span class="sd">        - Renders the &#39;delete.html&#39; template to confirm deletion if no POST request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">employee</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">employee_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">employee</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;employee:list&#39;</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;employee/delete.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="n">employee</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="list_employee">
+<a class="viewcode-back" href="../../employee.html#employee.views.list_employee">[docs]</a>
+<span class="k">def</span> <span class="nf">list_employee</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display a list of all employees, ordered by their first names.</span>
+
+<span class="sd">    Retrieves all employees from the database, orders them by first name, and renders them on the &#39;list.html&#39; template.</span>
+
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+
+<span class="sd">    :return: HttpResponse containing the rendered &#39;list.html&#39; template with the list of employees.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">Employee</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;employee/list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;employees&#39;</span><span class="p">:</span> <span class="n">employees</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="services_employee">
+<a class="viewcode-back" href="../../employee.html#employee.views.services_employee">[docs]</a>
+<span class="k">def</span> <span class="nf">services_employee</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">employee_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display the services assigned to an employee.</span>
+
+<span class="sd">    This view retrieves an employee&#39;s assigned services and groups them by their categories. The services are then</span>
+<span class="sd">    displayed on the &#39;services.html&#39; template.</span>
+
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+
+<span class="sd">    :param employee_id: Integer ID of the employee whose services are to be displayed.</span>
+
+<span class="sd">    :return: HttpResponse containing the rendered &#39;services.html&#39; template with the employee&#39;s services.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">employee</span> <span class="o">=</span> <span class="n">Employee</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
+        <span class="n">Prefetch</span><span class="p">(</span><span class="s1">&#39;services&#39;</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">))</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">employee_id</span><span class="p">)</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">employee</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;employee/services.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="n">employee</span><span class="p">,</span> <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">services</span><span class="p">})</span></div>
+
+
+    
+<div class="viewcode-block" id="view_details_employee">
+<a class="viewcode-back" href="../../employee.html#employee.views.view_details_employee">[docs]</a>
+<span class="k">def</span> <span class="nf">view_details_employee</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">employee_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display detailed information of a specific employee.</span>
+
+<span class="sd">    This view retrieves an employee with a specific ID and renders their details on the &#39;view.html&#39; template.</span>
+
+<span class="sd">    :param request: HttpRequest object containing request details.</span>
+<span class="sd">    </span>
+<span class="sd">    :param employee_id: Integer ID of the employee whose details are to be viewed.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: HttpResponse containing the rendered &#39;view.html&#39; template with employee details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">employee</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">employee_id</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;employee/view.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="n">employee</span><span class="p">})</span></div>
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Business Manager</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction to Business Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../urls.html">URLs Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Mónica González Barreto.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

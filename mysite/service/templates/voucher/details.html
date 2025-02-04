@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Bonos | Detalles del bono{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2>{{ voucher.name }}</h2>
+	<div class="cart text-center">
+		<div class="card-body">
+			<div class="container my-5">
+				<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+					<div class="card-body">
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Nombre</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.name }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Servicios</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{% for service in voucher.services.all %}
+									{{ service.name }}{% if not forloop.last %}, {% endif %}
+								{% endfor %}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Precio por sesión</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.price_session }}€
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Nº sesiones</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.total_sessions }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Descuento</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.discount }}%
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Precio final</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.discounted_price }}€
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-footer bg-transparent border-0 text-center">
+					<!-- Button to modify -->
+					<a href="{% url 'service:voucher_edit' voucher.id %}" class="btn mx-2">
+						<i class="bi bi-pencil-square"></i>Editar
+					</a>
+					<!-- Button to delete -->
+					<a href="{% url 'service:voucher_delete' voucher.id %}" class="btn mx-2">
+						<i class="bi bi-trash"></i>Eliminar
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- Float button back -->
+		<div class="position-fixed" style="bottom: 20px; left: 20px;">
+			<a href="{% url 'service:voucher_list' %}" class="btn">VOLVER</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

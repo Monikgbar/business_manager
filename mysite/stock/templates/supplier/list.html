@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Stock | Lista de proveedores{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<div class="d-inline">
+		<h2 style="display: inline; vertical-align: middle;">Proveedores</h2>
+		<!-- Search button supplier -->
+		<a href="#" data-bs-toggle="collapse" data-bs-target="#searchBox" aria-expanded="false" aria-controls="searchBox">
+			<img src="{% static 'resources/lookup.png' %}" alt="search product"
+					 style="max-width: 40px; margin-right: 20px; cursor: pointer;" data-bs-toggle="tooltip" title="Buscar producto">
+		</a>
+		<!-- Collapsible search box -->
+		<div class="collapse mt-3" id="searchBox">
+			<form method="get" action="{% url 'stock:product_search' %}" class="d-flex justify-content-start">
+				<input type="text" name="query" placeholder="Busca un producto aquí..." class="form-control w-100 me-2">
+				<button type="submit" class="btn">Buscar</button>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Create supplier Modal -->
+<button class="btn mt-2" data-bs-toggle="modal" data-bs-target="#createSupplier">Añadir Proveedor</button>
+<div class="modal fade" id="createSupplier" tabindex="-1" aria-labelledby="createSupplierLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createSupplierLabel">Añadir proveedor</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="post" action="{% url 'stock:supplier_add' %}">
+				{% csrf_token %}
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="name" class="form-label">Nombre</label>
+						<input type="text" class="form-control" id="name" name="name" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% if not suppliers %}
+	<div class="container-fluid mt-4">
+		<div class="container my-5">
+			<div class="card mx-auto" style="max-width: 650px;">
+				<div class="card-header text-center">
+					<h2>Añadir nuevo proveedor</h2>
+					<div class="card-body">
+						<button class="btn" data-bs-toggle="modal" data-bs-target="#createSupplier">AÑADIR</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% else %}
+	<!-- Show card if supplier exist -->
+	<div class="container-fluid mt-4">
+		<div class="row">
+			{% for supplier in suppliers %}
+				<div class="col-md-4 mb-3">
+					<div class="card" onclick="window.location='{% url 'stock:product_products_supplier' supplier.id %}'"
+							 style="cursor: pointer; border-left: 5px solid; color: #7e467c">
+						<div class="card-body">
+							<h6 class="card-title">{{ supplier.name }}</h6>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+			<!-- Card for products without supplier -->
+			<div class="col-md-4 mb-3">
+				<div class="card" onclick="window.location='{% url 'stock:product_products_without_supplier' %}'"
+						 style="cursor: pointer; border-left: 5px solid; color: #7e467c">
+					<div class="card-body">
+						<h6 class="card-title">Sin proveedor</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+</div>
+<!-- Float button add product -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'stock:product_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn">AÑADIR PRODUCTO</button>
+	</form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/modal.js' %}"></script>
+{% endblock %}

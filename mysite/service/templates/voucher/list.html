@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Bonos | Lista de bonos{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+	<div class="card-header">
+		<ul class="nav nav-tabs card-header-tabs d-flex align-items-center">
+			<li class="nav-item">
+				<a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{%endif %}"
+					 href="{% url 'service:category_list' %}">
+					Servicios
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link {% if request.resolver_match.url_name == 'voucher_list' %}active{%endif %}"
+					 href="{% url 'service:voucher_list' %}">
+					Bonos
+				</a>
+			</li>
+			<li class="nav-item ms-auto">
+				<!-- Search button voucher -->
+				<a href="#" data-bs-toggle="collapse" data-bs-target="#searchBox" aria-expanded="false" aria-controls="searchBox">
+					<img src="{% static 'resources/lookup.png' %}" alt="search service"
+							 style="max-width: 40px; margin-right: 20px; cursor: pointer;" data-bs-toggle="tooltip" title="Buscar">
+				</a>
+			</li>
+		</ul>
+		<!-- Collapsible search box -->
+		<div class="collapse mt-3" id="searchBox">
+			<form method="get" action="{% url 'service:service_search_items' model_name='voucher' %}"
+						class="d-flex justify-content-start">
+				<input type="text" name="query" placeholder="Busca bonos aquí..." class="form-control w-100 me-2">
+				<button type="submit" class="btn">Buscar</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% if not vouchers %}
+	<div class="container-fluid mt-4">
+		<h2>Bonos</h2>
+		<div class="container my-5">
+			<div class="card mx-auto" style="max-width: 650px;">
+				<div class="card-header text-center">
+					<h2>Añadir nuevo bono</h2>
+					<div class="card-body">
+						<a href="{% url 'service:voucher_add' %}" class="btn" type="submit">AÑADIR</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% else %}
+	<!-- Show table if vouchers exist -->
+	<div class="container-fluid mt-4">
+		<table class="table table-hover table-sm">
+			<thead>
+				<tr>
+					<th scope="col">Nombre</th>
+					<th scope="col">Servicios</th>
+					<th scope="col">Precio sesión</th>
+					<th scope="col">Nº de sesiones</th>
+					<th scope="col">Descuento</th>
+					<th scope="col">Precio final</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+			{% for voucher in vouchers %}
+				<tr onclick="window.location='{% url 'service:voucher_details' voucher.id %}'" style="cursor: pointer;">
+					<td>{{ voucher.name }}</td>
+					<td>
+						{% for service in voucher.services.all %}
+							{{ service.name }}{% if not forloop.last %}, {% endif %}
+						{% endfor %}
+					</td>
+					<td>{{ voucher.price_session }}€</td>
+					<td>{{ voucher.total_sessions }}</td>
+					<td>{{ voucher.discount }}%</td>
+					<td>{{ voucher.discounted_price }}€</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% if vouchers %}
+		{% include "shared/pagination.html" with page=vouchers %}
+	{% endif %}
+{% endif %}
+
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'service:voucher_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Añadir nuevo voucher">
+			+
+		</button>
+	</form>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+</div>
+{% endblock %}

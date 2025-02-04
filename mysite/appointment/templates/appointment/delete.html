@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Agenda | Borrar cita{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 650px;">
+		<div class="card-header text-center">
+			<h2>Eliminar cita</h2>
+			<div class="card-body">
+				<p>
+					¿Estás segura de que deseas eliminar la cita de {{ appointment.client.first_name }} {{ appointment.client.last_name }}?
+				</p>
+				<form method="POST" action="">
+					{% csrf_token %}
+					<button type="submit" class="btn">
+						ELIMINAR
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}

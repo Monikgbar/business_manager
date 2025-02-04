@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sales.views &#8212; Business Manager 0.1.0-alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=f34cbc3c"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for sales.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">EmptyPage</span><span class="p">,</span> <span class="n">PageNotAnInteger</span><span class="p">,</span> <span class="n">Paginator</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Sum</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span>
+
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">TransactionForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span> <span class="nn">client.models</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">ClientVoucher</span>
+<span class="kn">from</span> <span class="nn">appointment.models</span> <span class="kn">import</span> <span class="n">Appointment</span>
+<span class="kn">from</span> <span class="nn">service.models</span> <span class="kn">import</span> <span class="n">Service</span>
+
+
+<div class="viewcode-block" id="client_payment_history">
+<a class="viewcode-back" href="../../sales.html#sales.views.client_payment_history">[docs]</a>
+<span class="k">def</span> <span class="nf">client_payment_history</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">client_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display the payment history for a specific client.</span>
+
+<span class="sd">    This view retrieves all transactions for a given client, orders them by date, and paginates the results.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param client_id: The ID of the client whose payment history is being viewed.</span>
+<span class="sd">    :return: Rendered HTML page with the client&#39;s payment history.</span>
+
+<span class="sd">    :raises Http404: If the client with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">client_id</span><span class="p">)</span>
+    <span class="n">transactions</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-date&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Pagination with 20 payment per page</span>
+    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">transactions</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payments</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
+        <span class="c1"># If page_number is not an integer get the first page</span>
+        <span class="n">payments</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EmptyPage</span><span class="p">:</span>
+        <span class="c1"># If page_number is out of range get last page of results</span>
+        <span class="n">payments</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">paginator</span><span class="o">.</span><span class="n">num_pages</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">request</span><span class="p">,</span>
+        <span class="s1">&#39;sales/client_payment_history.html&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s1">&#39;client&#39;</span><span class="p">:</span> <span class="n">client</span><span class="p">,</span> <span class="s1">&#39;transactions&#39;</span><span class="p">:</span> <span class="n">transactions</span><span class="p">,</span> <span class="s1">&#39;payments&#39;</span><span class="p">:</span> <span class="n">payments</span><span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="delete_transaction">
+<a class="viewcode-back" href="../../sales.html#sales.views.delete_transaction">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_transaction</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete a specific transaction.</span>
+
+<span class="sd">    This view handles the deletion of a transaction. It requires a POST request to actually delete the transaction.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param transaction_id: The ID of the transaction to be deleted.</span>
+<span class="sd">    :return: Redirect to the payment list page after successful deletion, or confirmation page for GET requests.</span>
+<span class="sd">    :raises Http404: If the transaction with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Transaction</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">transaction_id</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;La transacción ha sido eliminada correctamente.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;sales:list_payment&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;sales/delete.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;transaction&#39;</span><span class="p">:</span> <span class="n">transaction</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="list_payment">
+<a class="viewcode-back" href="../../sales.html#sales.views.list_payment">[docs]</a>
+<span class="k">def</span> <span class="nf">list_payment</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display a list of all transactions.</span>
+
+<span class="sd">    This view retrieves all transactions, orders them by date, and paginates the results.</span>
+<span class="sd">    It also prefetches related data to optimize database queries.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :return: Rendered HTML page with the list of transactions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Transaction with related sales, services and details</span>
+    <span class="n">transactions</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s1">&#39;client&#39;</span><span class="p">,</span> <span class="s1">&#39;appointment&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
+        <span class="s1">&#39;appointment__services&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-date&#39;</span><span class="p">)</span>
+   
+    <span class="c1"># Pagination with 20 sales per page</span>
+    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">transactions</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">list_transactions</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
+        <span class="c1"># If page_number is not an integer get the first page</span>
+        <span class="n">list_transactions</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">EmptyPage</span><span class="p">:</span>
+        <span class="c1"># If page_number is out of range get last page of results</span>
+        <span class="n">list_transactions</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">paginator</span><span class="o">.</span><span class="n">num_pages</span><span class="p">)</span>
+    
+    <span class="c1"># Get the first client if there are transactions</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">transactions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">client</span> <span class="k">if</span> <span class="n">transactions</span> <span class="k">else</span> <span class="kc">None</span>
+    
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;list_transactions&#39;</span><span class="p">:</span> <span class="n">list_transactions</span><span class="p">,</span> <span class="s1">&#39;transactions&#39;</span><span class="p">:</span> <span class="n">transactions</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">client</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span>
+        
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;sales/list_payment.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="register_transaction">
+<a class="viewcode-back" href="../../sales.html#sales.views.register_transaction">[docs]</a>
+<span class="k">def</span> <span class="nf">register_transaction</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">appointment_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Register a new transaction or edit an existing one.</span>
+
+<span class="sd">    This view handles both GET and POST requests for registering a new transaction or editing an existing one. It</span>
+<span class="sd">    processes transaction and payment forms.</span>
+
+<span class="sd">    :param request: The HTTP request object.</span>
+<span class="sd">    :param appointment_id: The ID of the appointment associated with the transaction (optional).</span>
+<span class="sd">    :return: Rendered HTML page with transaction forms or redirect to payment list.</span>
+
+<span class="sd">    :raises Http404: If the appointment with the given ID does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get appointment and client</span>
+    <span class="n">appointment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Appointment</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">appointment_id</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">appointment</span><span class="o">.</span><span class="n">client</span>
+    <span class="n">total_amount</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">appointment</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>  <span class="c1"># Initialize total_amount</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="c1"># Pre-calculate total_amount</span>
+        <span class="n">selected_services</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;services&#39;</span><span class="p">)</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="n">Service</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">selected_services</span><span class="p">)</span>
+        <span class="n">total_amount</span> <span class="o">=</span> <span class="n">services</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">Sum</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">))[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        
+        <span class="n">transaction_form</span> <span class="o">=</span> <span class="n">TransactionForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">transaction_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            
+            <span class="c1"># Create transaction object</span>
+            <span class="n">transaction</span> <span class="o">=</span> <span class="n">transaction_form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">appointment</span> <span class="o">=</span> <span class="n">appointment</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">total_amount</span> <span class="o">=</span> <span class="n">total_amount</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">transaction_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;services&#39;</span><span class="p">])</span>  <span class="c1"># Assign the services</span>
+            
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Transacción registrada exitosamente.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;sales:list_payment&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">form</span> <span class="ow">in</span> <span class="p">[</span><span class="n">transaction_form</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error en </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+   
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">transaction_form</span> <span class="o">=</span> <span class="n">TransactionForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;client&#39;</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;total_amount&#39;</span><span class="p">:</span> <span class="n">total_amount</span><span class="p">,</span>
+            <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">appointment</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">})</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;sales/register_transaction.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;transaction_form&#39;</span><span class="p">:</span> <span class="n">transaction_form</span><span class="p">,</span>
+        <span class="s1">&#39;appointment&#39;</span><span class="p">:</span> <span class="n">appointment</span><span class="p">,</span>
+        <span class="s1">&#39;services&#39;</span><span class="p">:</span> <span class="n">appointment</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+        <span class="s1">&#39;total_amount&#39;</span><span class="p">:</span> <span class="n">total_amount</span><span class="p">,</span>
+    <span class="p">})</span></div>
+
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Business Manager</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction to Business Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../urls.html">URLs Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Mónica González Barreto.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

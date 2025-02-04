@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load duration_filters %}
+
+{% block title %}Servicios | Detalles del servicio{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2>{{ service.name }}</h2>
+	<div class="cart text-center">
+		<div class="card-body">
+			<div class="container my-5">
+				<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+					<div class="card-body">
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Servicio</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ service.name }}
+							</li>
+						</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Categoría</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ service.category }}
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Precio</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ service.price|floatformat:2 }}€
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Duración</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ service.duration }}
+						</li>
+					</ul>
+					<ul class="list-group list-group-horizontal">
+						<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+							<b>Disponibilidad</b>
+						</li>
+						<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+							{{ service.available }}
+						</li>
+					</ul>
+					</div>
+				</div>
+				<div class="card-footer bg-transparent border-0 text-center">
+					<!-- Button to modify -->
+					<a href="{% url 'service:service_edit' service.id %}" class="btn mx-2">
+						<i class="bi bi-pencil-square"></i>Editar
+					</a>
+					<!-- Button to delete -->
+					<a href="{% url 'service:service_delete' service.id %}" class="btn mx-2">
+						<i class="bi bi-trash"></i>Eliminar
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- Float button back -->
+		<div class="position-fixed" style="bottom: 20px; left: 20px;">
+			<a href="{% url 'service:category_list' %}" class="btn">VOLVER</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

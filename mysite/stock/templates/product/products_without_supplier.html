@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock | Lista de productos sin proveedor{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2>Productos sin proveedor</h2>
+	<table class="table table-hover table-sm mt-4">
+		<thead>
+			<tr>
+				<th scope="col">Producto</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Stock</th>
+				<th scope="col">Descripción</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			{% for product in products %}
+				<tr onclick="window.location='{% url 'stock:product_details' product.id %}'" style="cursor: pointer;">
+					<td>{{ product.name }}</td>
+					<td>{{ product.price }}</td>
+					<td>{{ product.stock }}</td>
+					<td>{{ product.description }}</td>
+				</tr>
+			{% empty %}
+				<p>No hay productos disponibles sin proveedor.</p>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'stock:supplier_list' %}" class="btn">VOLVER</a>
+</div>
+
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+	<form method="POST" action="{% url 'stock:product_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn btn-circle" data-bs-toggle="tooltip"
+						title="Añadir nuevo producto">
+			+
+		</button>
+	</form>
+</div>
+{% endblock %}

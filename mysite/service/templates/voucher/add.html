@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bonos | Añadir bono{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Añadir nuevo bono</h2>
+			<div class="card-body">
+				<form action=""  method="POST">
+					{% csrf_token %}
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Nombre</label>
+						<div class="col-sm-9">
+							{{ form.name }}
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Servicios</label>
+						<div class="col-sm-9">
+							<select id="services" name="services" class="form-control select2" multiple="multiple">
+								{% for group in services_by_category %}
+									<optgroup label="{{ group.category.name|default:'Sin categoría' }}">
+										{% for service in group.services %}
+											<option value="{{ service.id }}">
+												{{ service.name }}
+											</option>
+										{% endfor %}
+									</optgroup>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Precio sesión</label>
+						<div class="col-sm-9">
+							{{ form.price_session }}
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Nª sesiones</label>
+						<div class="col-sm-9">
+							{{ form.total_sessions }}
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+						<label class="col-sm-3 col-form-label text-start">Descuento</label>
+						<div class="col-sm-9">
+							{{ form.discount }}
+						</div>
+					</div>
+					<div style="d-flex justify-content-center;">
+						<button class="btn" type="submit">GUARDAR</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'service:voucher_list' %}" class="btn">VOLVER</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/select2.js' %}"></script>
+{% endblock %}

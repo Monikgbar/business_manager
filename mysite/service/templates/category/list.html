@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categorías | Lista de categorías{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs d-flex align-items-center">
+      <li class="nav-item">
+				<a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{%endif %}"
+					 href="{% url 'service:category_list' %}">
+					Servicios
+				</a>
+			</li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'voucher_list' %}active{%endif %}"
+					 href="{% url 'service:voucher_list' %}">
+					Bonos
+				</a>
+      </li>
+			<li class="nav-item ms-auto">
+				<!-- Search button services -->
+				<a href="#" data-bs-toggle="collapse" data-bs-target="#searchBox" aria-expanded="false" aria-controls="searchBox">
+					<img src="{% static 'resources/lookup.png' %}" alt="search service"
+							 style="max-width: 40px; margin-right: 20px; cursor: pointer;" data-bs-toggle="tooltip" title="Buscar">
+				</a>
+			</li>
+		</ul>
+		<!-- Collapsible search box -->
+		<div class="collapse mt-3" id="searchBox">
+			<form method="get" action="{% url 'service:service_search_items' model_name='service' %}"
+						class="d-flex justify-content-start">
+				<input type="text" name="query" placeholder="Busca servicios aquí..." class="form-control w-100 me-2">
+				<button type="submit" class="btn">Buscar</button>
+			</form>
+		</div>
+  </div>
+</div>
+{% if not categories %}
+	<div class="container-fluid mt-4">
+		<h2>Categorías</h2>
+		<div class="container my-5">
+			<div class="card mx-auto" style="max-width: 650px;">
+				<div class="card-header text-center">
+					<h2>Añadir nuevo categoría</h2>
+					<div class="card-body">
+						<a href="{% url 'service:category_add' %}" class="btn" type="submit">AÑADIR</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% else %}
+	<!-- Show card if category exist -->
+	<div class="container-fluid mt-4">
+		<div class="row">
+			{% for category in categories %}
+				<div class="col-md-4 mb-3">
+					<div class="card" onclick="window.location='{% url 'service:service_services_category' category.id %}'"
+							 style="cursor: pointer; border-left: 5px solid {{ category.color}};">
+						<div class="card-body">
+							<h6 class="card-title" style="color: {{ category.color }}">{{ category.name }}</h6>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+			<!-- Card for services without category -->
+			<div class="col-md-4 mb-3">
+				<div class="card" onclick="window.location='{% url 'service:service_services_without_category' %}'"
+						 style="cursor: pointer; border-left: 5px solid {{ category.color}};">
+					<div class="card-body">
+						<h6 class="card-title" style="color: {{ category.color }}">Sin categoría</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+<!-- Float button back -->
+<div class="position-fixed" style="bottom: 20px; left: 20px;">
+	<a href="{% url 'appointment:agenda' %}" class="btn">VOLVER</a>
+</div>
+
+<!-- Float button add services -->
+<!-- Float button -->
+<div class="position-fixed" style="bottom: 70px; right: 20px;">
+	<form method="POST" action="{% url 'service:service_add' %}">
+		{% csrf_token %}
+		<button type="submit" name="action" value="add" class="btn">AÑADIR SERVICIO</button>
+	</form>
+</div>
+
+<!-- Float button add categories -->
+<div class="position-fixed" style="bottom: 20px; right: 20px;">
+		<a href="{% url 'service:category_add' %}" class="btn">AÑADIR CATEGORÍA</a>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Clientes|Bonos | Asignar bono{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+	<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+		<div class="card-header text-center">
+			<h2>Asignar bono</h2>
+			<div class="card-body">
+				<form class="form" method="POST" action="{% url 'client:voucher_assign' client.id %}">
+					{% csrf_token %}
+					<div class="mb-3 row">
+						<label class="col-sm-4 col-form-label text-start">Cliente</label>
+						<div class="col-sm-8">
+							{{ form.client }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-4 col-form-label text-start">Bono</label>
+						<div class="col-sm-8">
+							{{ form.voucher }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-4 col-form-label text-start">Fecha de compra</label>
+						<div class="col-sm-8">
+							{{ form.purchase_date }}
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-sm-4 col-form-label text-start">Caducidad</label>
+						<div class="col-sm-8">
+							{{ form.expiration_date }}
+						</div>
+					</div>
+					<button class="btn" type="submit">GUARDAR</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Float button back -->
+	<div class="position-fixed" style="bottom: 20px; left: 20px;">
+		<a href="{% url 'client:voucher_client_list' client.id %}" class="btn">VOLVER</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/select2.js' %}"></script>
+{% endblock %}

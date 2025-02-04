@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Cliente|Bono | Detalles del bono{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+	<h2>Bono de {{ client.first_name }} {{ client.last_name }}</h2>
+	<div class="cart text-center">
+		<div class="card-body">
+			<div class="container my-5">
+				<div class="card mx-auto" style="max-width: 600px; background-color: #d5c3d4;">
+					<div class="card-body">
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Nombre</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.voucher.name }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Fecha de compra</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.purchase_date }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Caducidad</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.expiration_date }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Sesiones restantes</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.sessions_remaining }}
+							</li>
+						</ul>
+						<ul class="list-group list-group-horizontal">
+							<li class="list-group-item flex-fill text-start" style="width: 25%; text-align: left;">
+								<b>Activo</b>
+							</li>
+							<li class="list-group-item flex-fill text-center" style="width: 50%; text-align: right;">
+								{{ voucher.get_is_active_display }}
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-footer bg-transparent border-0 text-center">
+					<!-- Button to modify -->
+					<a href="{% url 'client:voucher_client_edit' voucher.id %}" class="btn mx-2">
+						<i class="bi bi-pencil-square"></i>Editar
+					</a>
+					<!-- Button to delete -->
+					<a href="{% url 'client:voucher_client_delete' voucher.id %}" class="btn mx-2">
+						<i class="bi bi-trash"></i>Eliminar
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- Float button back -->
+		<div class="position-fixed" style="bottom: 20px; left: 20px;">
+			<a href="{% url 'client:voucher_client_list' client.id %}" class="btn">VOLVER</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
